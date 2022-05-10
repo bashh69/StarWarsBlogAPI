@@ -8,7 +8,8 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User
+from models import db, User, Characters, Stars, Ships
+
 #from models import Person
 
 app = Flask(__name__)
@@ -38,6 +39,39 @@ def handle_hello():
     }
 
     return jsonify(response_body), 200
+
+@app.route('/characters', methods=['GET'])
+def my_characters():
+    characters_query = Characters.query.all()
+    all_characters = list(map(lambda character: character.serialize(), characters_query))
+    return jsonify(all_characters), 200
+
+@app.route('/characters/<int:characters_id>', methods=['GET'])
+def characters_by_id(characters_id):
+    characters = Characters.query.get(characters_id)
+    return jsonify(characters.serialize()), 200
+
+@app.route('/stars', methods=['GET'])
+def my_stars():
+    stars_query = Stars.query.all()
+    all_stars = list(map(lambda stars: stars.serialize(), stars_query))
+    return jsonify(all_stars), 200
+
+@app.route('/stars/<int:stars_id>', methods=['GET'])
+def my_stars_id(stars_id):
+    user1 = Stars.query.get(stars_id)
+    return jsonify(user1.serialize()), 200
+
+@app.route('/ships', methods=['GET'])
+def my_ships():
+    ships_query = Ships.query.all()
+    all_ships = list(map(lambda ships: ships.serialize(), ships_query))
+    return jsonify(all_ships), 200
+
+@app.route('/ships/<int:ships_id>', methods=['GET'])
+def my_ships_id(ships_id):
+    user1 = Ships.query.get(ships_id)
+    return jsonify(user1.serialize()), 200
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
